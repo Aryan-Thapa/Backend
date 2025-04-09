@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-zinc-800 p-4">
+    <form action="/register" method="post">
+      <input
+        type="text"
+        name="username"
+        placeholder="Username"
+        class="bg-transparent border-2 border-zinc-600 text-white p-2 rounded-md mb-2"
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        class="bg-transparent border-2 border-zinc-600 text-white p-2 rounded-md mb-2"
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        class="bg-transparent border-2 border-zinc-600 text-white p-2 rounded-md mb-2"
+      />
+      <button
+        type="submit"
+        class="bg-blue-600 border-2 border-zinc-600 text-white p-2 rounded-md mb-2 cursor-pointer hover:opacity:80"
+      >
+        Register
+      </button>
+    </form>
+  </body>
+</html>
