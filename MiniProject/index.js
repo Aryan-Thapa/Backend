@@ -29,11 +29,11 @@ app.post("/register", async (req, res) => {
           email: email,
           password: hash,
         });
+        let token = jwt.sign({ email: email, userId: newUser._id }, "shhhh");
+        res.cookie("token", token);
+        res.status(200).send("User registered successfully");
       });
     });
-    let token = jwt.sign({ email: email, userId: newUser._id }, "shhhh");
-    res.cookie("token", token);
-    res.status(200).send("User registered successfully");
   }
 });
 
@@ -70,12 +70,19 @@ app.get("/logout", isLoggedIn, (req, res) => {
 
 //isLoggedIn middleware
 function isLoggedIn(req, res, next) {
-  if (req.cookies.token === "") res.send("You must be logged in!");
-  else {
-    let data = jwt.verify(req.cookies.token, "shhhh");
-    req.user = data;
+  const token = req.cookies.token;
+  if (!token) {
+    return res.redirect("/login");
   }
-  next();
+
+  try {
+    const data = jwt.verify(token, "shhhh");
+    req.user = data;
+    next();
+  } catch (err) {
+    console.error("JWT verification failed:", err.message);
+    return res.redirect("/login");
+  }
 }
 
 app.listen(3000, () => {
