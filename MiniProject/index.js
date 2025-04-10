@@ -31,7 +31,7 @@ app.post("/register", async (req, res) => {
         });
         let token = jwt.sign({ email: email, userId: newUser._id }, "shhhh");
         res.cookie("token", token);
-        res.status(200).send("User registered successfully");
+        res.redirect("/profile");
       });
     });
   }
@@ -41,10 +41,27 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.get("/profile", isLoggedIn, (req, res) => {
-  console.log(req.user);
-  res.send(req.user);
+app.get("/profile", isLoggedIn, async (req, res) => {
+  const user = await userModel
+    .findOne({ email: req.user.email })
+    .populate("post");
+  console.log("User data:", user);
+  res.render("profile", { user: user });
 });
+
+app.post("/posts", isLoggedIn, async (req, res) => {
+  const user = await userModel.findOne({ email: req.user.email });
+  const { postData } = req.body;
+
+  let post = await postModel.create({
+    user: user._id,
+    postData: postData,
+  });
+  user.post.push(post._id);
+  await user.save();
+  res.redirect("/profile");
+});
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email: email });
@@ -55,7 +72,7 @@ app.post("/login", async (req, res) => {
       if (result) {
         let token = jwt.sign({ email: email, userId: user._id }, "shhhh");
         res.cookie("token", token);
-        res.status(200).send("User logged in successfully");
+        res.redirect("/profile");
       } else {
         res.status(400).send("Entered Password is wrong");
       }
