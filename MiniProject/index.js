@@ -49,6 +49,31 @@ app.get("/profile", isLoggedIn, async (req, res) => {
   res.render("profile", { user: user });
 });
 
+app.get("/likes/:id", isLoggedIn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
+
+  if (post.likes.indexOf(req.user.userId) === -1) {
+    post.likes.push(req.user.userId);
+  } else {
+    post.likes.splice(post.likes.indexOf(req.user.userId), 1);
+  }
+  await post.save();
+  res.redirect("/profile");
+});
+
+app.get("/edit/:id", isLoggedIn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
+  console.log("post", post);
+  res.render("edit", { post, user: req.user });
+});
+
+app.post("/edit/:id", isLoggedIn, async (req, res) => {
+  let post = await postModel
+    .findOneAndUpdate({ _id: req.params.id }, { postData: req.body.postData })
+    .populate("user");
+  res.redirect("/profile");
+});
+
 app.post("/posts", isLoggedIn, async (req, res) => {
   const user = await userModel.findOne({ email: req.user.email });
   const { postData } = req.body;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-zinc-800 p-4 text-white">
+    <div class="">
+      <h1 class="text-2xl text-gray-400">Edit Post</h1>
+      <form class="flex flex-col gap-2" action="/edit/<%=post._id%>" method="post">
+        <textarea
+          name="postData"
+          class="bg-transparent border-2 border-zinc-600 p-2 resize-none w-100 h-50 rounded-lg"
+        >
+<%= post.postData%></textarea
+        >
+        <button
+          type="submit"
+          class="bg-blue-600 px-4 py-2 rounded-lg cursor-pointer hover:opacity-70 w-100"
+        >
+          Edit Post
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
